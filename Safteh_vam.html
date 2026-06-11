@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>محاسبه‌گر سفته و اقساط وام رسالت | واکنش‌گرا</title>
+    <style>
+        /* ----- فونت وزیرمتن (Vazirmatn) ----- */
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://web-asset.zoomit.ir/zoomit/3d7ff083/desktop/_next/static/media/Vazirmatn_Black-s.p.0uv7xr1_olixe.woff2') format('woff2');
+            font-weight: 900;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://web-asset.zoomit.ir/zoomit/3d7ff083/desktop/_next/static/media/Vazirmatn_Bold-s.p.16a~blr4zj1bm.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('https://web-asset.zoomit.ir/zoomit/3d7ff083/desktop/_next/static/media/Vazirmatn_Regular-s.p.043w5qwqv.-rz.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, system-ui, sans-serif;
+            background: linear-gradient(135deg, #eef2f9 0%, #d9e3ed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(6px, 2vw, 16px);
+        }
+
+        .card {
+            max-width: 720px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: clamp(24px, 5vw, 40px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(125deg, #0a2b3e, #144d6b);
+            padding: clamp(12px, 3vw, 18px) clamp(14px, 4vw, 22px);
+            text-align: center;
+        }
+        .hero h1 {
+            font-weight: 900;
+            font-size: clamp(1.2rem, 5.5vw, 1.6rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+            color: white;
+        }
+        .hero h1 span {
+            background: rgba(0, 0, 0, 0.25);
+            color: #FFD966;
+            font-weight: 700;
+            font-size: clamp(0.7rem, 3vw, 1rem);
+            padding: 2px 10px;
+            border-radius: 30px;
+            backdrop-filter: blur(2px);
+        }
+        .hero p {
+            font-weight: 400;
+            font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+            color: white;
+            opacity: 0.95;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f0f5fa;
+            border-bottom: 1px solid #d4e2ef;
+        }
+        .tab-btn {
+            flex: 1;
+            text-align: center;
+            padding: clamp(8px, 2.5vw, 12px) clamp(4px, 1.5vw, 8px);
+            font-weight: 700;
+            font-size: clamp(0.75rem, 3.2vw, 0.9rem);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            color: #3c6e8f;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #0a2b3e;
+            background: white;
+            border-bottom-color: #2c7da0;
+        }
+
+        .tab-content {
+            display: none;
+            padding: clamp(14px, 4vw, 22px) clamp(14px, 4vw, 22px);
+            background: white;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: clamp(12px, 3.5vw, 18px);
+        }
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 700;
+            color: #1a4962;
+            margin-bottom: 4px;
+            font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+            padding-right: 5px;
+            border-right: 2px solid #2c7da0;
+        }
+        .input-wrapper input {
+            width: 100%;
+            padding: clamp(8px, 2.5vw, 12px) clamp(12px, 3.5vw, 18px);
+            font-size: clamp(0.85rem, 3.8vw, 1rem);
+            font-family: 'Vazirmatn', monospace;
+            background-color: #f9fcff;
+            border: 1.5px solid #e2edf5;
+            border-radius: 40px;
+            transition: all 0.2s;
+            outline: none;
+            color: #0c3b4f;
+            text-align: left;
+            direction: ltr;
+        }
+        .input-wrapper input:focus {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.15);
+            background: white;
+        }
+
+        .compact-slider {
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1.8vw, 10px);
+            background: #f3f8fe;
+            padding: clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px);
+            border-radius: 50px;
+            flex-wrap: wrap;
+        }
+        .compact-slider span {
+            font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+            font-weight: 500;
+            color: #1a4962;
+            white-space: nowrap;
+        }
+        .compact-slider input[type="range"] {
+            flex: 3;
+            min-width: 100px;
+            height: 4px;
+            border-radius: 10px;
+            background: #cde1ef;
+            -webkit-appearance: none;
+        }
+        .compact-slider input[type="range"]:focus {
+            outline: none;
+        }
+        .compact-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2c7da0;
+            cursor: pointer;
+        }
+        .compact-slider input[type="number"] {
+            width: 70px;
+            text-align: center;
+            font-family: 'Vazirmatn', monospace;
+            padding: 4px 2px;
+            border-radius: 30px;
+            border: 1px solid #cde1ef;
+            background: white;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2.8vw, 0.85rem);
+        }
+        .month-unit {
+            background: #e9f0f5;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+            color: #0f4b66;
+        }
+
+        .result-panel {
+            background: #ecf5fb;
+            border-radius: clamp(24px, 4.5vw, 32px);
+            padding: clamp(10px, 3vw, 16px) clamp(10px, 3vw, 16px);
+            margin: 14px 0 12px;
+            text-align: center;
+            border: 1px solid #cde1ef;
+        }
+        .result-label {
+            font-weight: 700;
+            font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+            color: #23627e;
+            margin-bottom: 6px;
+        }
+        .result-value {
+            background: white;
+            display: inline-block;
+            padding: clamp(5px, 2vw, 8px) clamp(14px, 4vw, 24px);
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 6vw, 1.8rem);
+            color: #135c7a;
+            font-family: 'Vazirmatn', monospace;
+        }
+        .result-value small {
+            font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+        }
+        .installment-box {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px dashed #bdd6e8;
+        }
+        .installment-label {
+            font-weight: 700;
+            font-size: clamp(0.7rem, 3vw, 0.8rem);
+            color: #1f6390;
+        }
+        .info-text {
+            font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+            color: #557e99;
+            margin-top: 5px;
+        }
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0 6px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            padding: clamp(6px, 2vw, 10px) clamp(8px, 2.5vw, 14px);
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: clamp(0.65rem, 2.8vw, 0.8rem);
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: none;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn-example {
+            background: #f1f9ff;
+            border: 1.2px solid #2c7da0;
+            color: #1b5e7e;
+        }
+        .btn-fullscreen {
+            background: #2c7da0;
+            color: white;
+        }
+        .btn-example:hover, .btn-fullscreen:hover {
+            transform: scale(0.97);
+            opacity: 0.9;
+        }
+        .footnote {
+            margin-top: 14px;
+            background: #fafdff;
+            padding: clamp(8px, 2.5vw, 12px);
+            border-radius: 24px;
+            font-size: clamp(0.55rem, 2.5vw, 0.65rem);
+            color: #547186;
+            text-align: center;
+            border: 1px solid #deecf5;
+        }
+        hr {
+            margin: 4px 0;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to left, #c7ddee, transparent);
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                white-space: normal;
+                font-size: 0.65rem;
+            }
+            .compact-slider {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body { background: linear-gradient(145deg, #1d2b38, #121f2b); }
+            .card { background: #202f3a; }
+            .hero { background: linear-gradient(125deg, #0b293f, #104257); }
+            .tab-btn { background: #172d3a; color: #bdd9ec; }
+            .tab-btn.active { background: #202f3a; color: white; border-bottom-color: #5f9ebd; }
+            .tab-content { background: #202f3a; }
+            .input-wrapper input { background: #2a3e4b; border-color: #3f6072; color: #eef4f9; }
+            .result-panel { background: #1e3645; border-color: #2a546b; }
+            .result-value { background: #152e3b; color: #e0f0fa; }
+            .btn-example { background: #203e4f; border-color: #4682a0; color: #d4ecff; }
+            .footnote { background: #1b3341; color: #b7d3e8; }
+            .input-group label { color: #c1e2f5; }
+            .compact-slider { background: #1a3240; }
+            .compact-slider input[type="number"] { background: #2a3e4b; color: white; border-color: #3f6072; }
+            .month-unit { background: #0f3448; color: #d0eaff; }
+            .installment-box { border-top-color: #3e6a84; }
+        }
+    </style>
+</head>
+<body>
+<div class="card" id="appCard">
+    <div class="hero">
+        <h1>📄 سفته‌بانک <span>ابزار هوشمند</span></h1>
+        <p>محاسبه درصد سفته + محاسبه وام رسالت (بدون کارمزد) + نمایش قسط</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tab1">📊 درصد سفته</button>
+        <button class="tab-btn" data-tab="tab2">📉 وام رسالت (امتیاز ۱۰ ماهه)</button>
+    </div>
+
+    <!-- تب 1: درصد سفته (بدون تغییر) -->
+    <div id="tab1" class="tab-content active">
+        <div class="input-group">
+            <label>💰 مبلغ وام (تومان)</label>
+            <div class="input-wrapper">
+                <input type="text" id="loanAmountTab1" placeholder="مثال : 100,000,000" inputmode="numeric" value="100,000,000">
+            </div>
+        </div>
+        <div class="input-group">
+            <label>📊 درصد مبلغ وام (%)</label>
+            <div class="input-wrapper">
+                <input type="text" id="percentTab1" placeholder="مثال : 120" inputmode="decimal" value="120">
+            </div>
+        </div>
+        <div class="result-panel">
+            <div class="result-label">✨ مبلغ خرید سفته ✨</div>
+            <div class="result-value" id="resultTab1">۰ تومان</div>
+            <div class="info-text">مبلغ وام × (درصد ÷ ۱۰۰)</div>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-example" id="exampleTab1Btn">📌 مثال: ۱۰۰ میلیون + ۱۲۰٪</button>
+            <button class="btn btn-fullscreen" id="fullscreenBtn">⛶ تمام صفحه</button>
+        </div>
+        <div class="footnote">
+            ⚡ فرمول: مبلغ سفته = مبلغ وام × (درصد ÷ ۱۰۰)<br>
+            🔹 اعداد فارسی و کاما خودکار اصلاح می‌شوند.
+        </div>
+    </div>
+
+    <!-- تب 2: وام رسالت با فرمول صحیح -->
+    <div id="tab2" class="tab-content">
+        <div class="input-group">
+            <label>🏷️ مجموع امتیاز (تومان) - مبلغ سه امتیاز ۱۰ ماهه</label>
+            <div class="input-wrapper">
+                <input type="text" id="totalScore" placeholder="مثال: 180,681,395" inputmode="numeric" value="180,681,395">
+            </div>
+        </div>
+        <div class="input-group">
+            <label>📅 تعداد ماه (حداقل ۱۰ ماه)</label>
+            <div class="compact-slider">
+                <span>۱۰</span>
+                <input type="range" id="monthSlider" min="10" max="60" step="1" value="11">
+                <input type="number" id="monthNumber" min="10" max="60" step="1" value="11">
+                <span class="month-unit">ماه</span>
+                <span>۶۰</span>
+            </div>
+            <div class="info-text">🔻 مبلغ وام = مجموع امتیاز × (۱۰ ÷ تعداد ماه)</div>
+        </div>
+        <div class="result-panel">
+            <div class="result-label">💰 مبلغ وام قابل پرداخت</div>
+            <div class="result-value" id="resultTab2">۰ تومان</div>
+            <div class="installment-box">
+                <div class="installment-label">📆 مبلغ هر قسط (ماهانه بدون کارمزد)</div>
+                <div class="result-value" id="installmentAmount" style="font-size: clamp(1rem, 5vw, 1.5rem);">۰ تومان</div>
+                <div class="info-text">قسط ماهانه = مبلغ وام ÷ تعداد ماه</div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-example" id="exampleTab2Btn">🔁 مثال: مجموع ۱۸۰,۶۸۱,۳۹۵ - ۱۱ ماه</button>
+        </div>
+        <div class="footnote">
+            ✅ <strong>فرمول صحیح وام رسالت (بدون کارمزد):</strong><br>
+            • مبلغ وام = مجموع امتیاز (سه امتیاز ۱۰ ماهه) × (۱۰ ÷ تعداد ماه انتخابی)<br>
+            • قسط ماهانه = مبلغ وام ÷ تعداد ماه<br>
+            • مثال: مجموع ۱۸۰,۶۸۱,۳۹۵ و تعداد ماه ۱۱ → وام ۱۶۴,۲۵۵,۸۱۴ تومان و قسط ۱۴,۹۳۲,۳۴۷ تومان
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- توابع مشترک (نرمال‌سازی اعداد و جداساز) ----------
+        function toEnglishDigits(str) {
+            if (!str && str !== 0) return '';
+            const persian = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9' };
+            const arabic = { '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9' };
+            let res = String(str);
+            res = res.replace(/[۰-۹]/g, m => persian[m]);
+            res = res.replace(/[٠-٩]/g, m => arabic[m]);
+            return res;
+        }
+
+        function cleanNumber(raw, allowDecimal = false) {
+            let cleaned = toEnglishDigits(raw);
+            if (allowDecimal) cleaned = cleaned.replace(/[^0-9.]/g, '');
+            else cleaned = cleaned.replace(/[^0-9]/g, '');
+            if (allowDecimal && cleaned.includes('.')) {
+                let parts = cleaned.split('.');
+                if (parts.length > 2) cleaned = parts[0] + '.' + parts.slice(1).join('');
+            }
+            if (cleaned === '') return NaN;
+            return allowDecimal ? parseFloat(cleaned) : parseInt(cleaned, 10);
+        }
+
+        function addThousandSeparator(numStr) {
+            if (numStr === '') return '';
+            let parts = numStr.split('.');
+            let intPart = parts[0].replace(/,/g, '');
+            let decPart = parts.length > 1 ? '.' + parts[1] : '';
+            let formatted = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return formatted + decPart;
+        }
+
+        function getNumberFromField(inputEl, allowDecimal = false) {
+            let raw = inputEl.value;
+            let cleaned = cleanNumber(raw, allowDecimal);
+            if (isNaN(cleaned)) return NaN;
+            return cleaned;
+        }
+
+        function setNumberToField(inputEl, num, addComma = true) {
+            if (isNaN(num)) { inputEl.value = ''; return; }
+            let str = Math.floor(num).toString();
+            if (addComma) {
+                inputEl.value = addThousandSeparator(str);
+            } else {
+                inputEl.value = str;
+            }
+        }
+
+        // ---------- تب 1 (درصد سفته) بدون تغییر ----------
+        const loanInput = document.getElementById('loanAmountTab1');
+        const percentInput = document.getElementById('percentTab1');
+        const resultSpan1 = document.getElementById('resultTab1');
+        const exampleBtn1 = document.getElementById('exampleTab1Btn');
+
+        function computeTab1() {
+            let loan = getNumberFromField(loanInput, true);
+            let percent = getNumberFromField(percentInput, true);
+            if (isNaN(loan)) loan = 0;
+            if (isNaN(percent)) percent = 0;
+            const purchase = loan * (percent / 100);
+            let formatted = purchase.toLocaleString('fa-IR', { maximumFractionDigits: 0 });
+            if (purchase % 1 !== 0) formatted = purchase.toLocaleString('fa-IR', { maximumFractionDigits: 2 });
+            resultSpan1.innerHTML = `${formatted} <small>تومان</small>`;
+        }
+
+        function onLoanInput(e) {
+            let raw = e.target.value;
+            let num = cleanNumber(raw, true);
+            if (!isNaN(num)) setNumberToField(loanInput, num, true);
+            else loanInput.value = '';
+            computeTab1();
+        }
+        function onPercentInput(e) {
+            let raw = e.target.value;
+            let num = cleanNumber(raw, true);
+            if (!isNaN(num)) setNumberToField(percentInput, num, true);
+            else percentInput.value = '';
+            computeTab1();
+        }
+        function setExampleTab1() {
+            setNumberToField(loanInput, 100000000, true);
+            setNumberToField(percentInput, 120, true);
+            computeTab1();
+        }
+        loanInput.addEventListener('input', onLoanInput);
+        percentInput.addEventListener('input', onPercentInput);
+        exampleBtn1.addEventListener('click', setExampleTab1);
+        setNumberToField(loanInput, 100000000, true);
+        setNumberToField(percentInput, 120, true);
+        computeTab1();
+
+        // ---------- تب 2 (وام رسالت با فرمول صحیح) ----------
+        const totalScoreInput = document.getElementById('totalScore');
+        const monthSlider = document.getElementById('monthSlider');
+        const monthNumber = document.getElementById('monthNumber');
+        const resultSpan2 = document.getElementById('resultTab2');
+        const installmentSpan = document.getElementById('installmentAmount');
+        const exampleBtn2 = document.getElementById('exampleTab2Btn');
+
+        function computeTab2() {
+            let total = getNumberFromField(totalScoreInput);
+            if (isNaN(total)) total = 0;
+            let months = parseInt(monthSlider.value, 10);
+            if (isNaN(months)) months = 10;
+            months = Math.min(60, Math.max(10, months));
+            
+            // فرمول اصلی: وام = مجموع امتیاز × (10 / تعداد ماه)
+            let loanAmount = total * (10 / months);
+            let installment = (months > 0) ? loanAmount / months : 0;
+            
+            let formattedLoan = Math.floor(loanAmount).toLocaleString('fa-IR');
+            let formattedInstallment = Math.floor(installment).toLocaleString('fa-IR');
+            if (installment % 1 !== 0) formattedInstallment = installment.toLocaleString('fa-IR', { maximumFractionDigits: 2 });
+            
+            resultSpan2.innerHTML = `${formattedLoan} <small>تومان</small>`;
+            installmentSpan.innerHTML = `${formattedInstallment} <small>تومان</small>`;
+        }
+
+        function syncMonth(value) {
+            let v = parseInt(value, 10);
+            if (isNaN(v)) v = 10;
+            v = Math.min(60, Math.max(10, v));
+            monthSlider.value = v;
+            monthNumber.value = v;
+            computeTab2();
+        }
+
+        totalScoreInput.addEventListener('input', () => computeTab2());
+        totalScoreInput.addEventListener('blur', () => {
+            let num = getNumberFromField(totalScoreInput);
+            if (!isNaN(num)) setNumberToField(totalScoreInput, num, true);
+            computeTab2();
+        });
+        monthSlider.addEventListener('input', (e) => syncMonth(e.target.value));
+        monthNumber.addEventListener('input', (e) => syncMonth(e.target.value));
+
+        function setExampleTab2() {
+            setNumberToField(totalScoreInput, 180681395, true);
+            syncMonth(11);
+        }
+        exampleBtn2.addEventListener('click', setExampleTab2);
+
+        // مقداردهی اولیه تب 2
+        setNumberToField(totalScoreInput, 180681395, true);
+        syncMonth(11);
+
+        // ---------- مدیریت تب‌ها و تمام صفحه ----------
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                tabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                contents.forEach(c => c.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                if (tabId === 'tab1') computeTab1();
+                else computeTab2();
+            });
+        });
+
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        function toggleFullscreen() {
+            const doc = document.documentElement;
+            if (!document.fullscreenElement) {
+                doc.requestFullscreen().catch(err => console.warn(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        if (fullscreenBtn) fullscreenBtn.addEventListener('click', toggleFullscreen);
+    })();
+</script>
+</body>
+</html>
